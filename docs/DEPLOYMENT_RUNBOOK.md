@@ -24,7 +24,15 @@ ansible-playbook ansible/bootstrap_hybrid_node.yml \
   --private-key="/opt/pipeline/secrets/id_rsa"
 ```
 
-## 4. Verification Checklists
+## 4. Sandbox Infrastructure Verification
+To safely validate host changes inside a local sandbox environment before executing playbooks en masse, run the verification workbook:
+
+```bash
+# Execute the integration workbook to test package architecture and network simulations
+ansible-playbook playbooks/sandbox_verification_workbook.yml
+```
+
+## 5. Verification Checklists
 Upon playbook completion, run these non-interactive diagnostic tasks on the target instance to confirm success:
 
 - [ ] Verify the host name maps correctly to the zone template: `hostname -f`
