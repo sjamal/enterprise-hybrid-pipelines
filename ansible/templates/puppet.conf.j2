@@ -1,0 +1,13 @@
+[main]
+certname = {{ inventory_hostname }}.{{ environment_tier | lower }}.internal
+server = {{ puppet_master_fqdn }}
+environment = {{ environment_tier | lower }}
+runinterval = 30m
+srv_domain = internal.institutional.edu
+
+[agent]
+report = true
+pluginsync = true
+autoflush = true
+autosign = true
+
