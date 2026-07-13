@@ -1,0 +1,57 @@
+---
+# file: enterprise-hybrid-pipelines/ansible/bootstrap_hybrid_node.yml
+- name: Post-Provisioning Enterprise Bootstrap
+  hosts: all
+  gather_facts: true
+  vars:
+    puppet_master_fqdn: "puppetmaster.institutional.edu"
+    environment_tier: "QA" # Dynamic: SB, SIT, DEV, QA/T, UAT, PRD.
+    network_zone: "tier1_app" # Dynamic: tier0_db, tier1_app, tier2_dmz
+
+  tasks:
+    - name: Ensure OS is SLES or Ubuntu before applying configurations
+      assert:
+        that:
+          - ansible_os_family in ['Suse', 'Debian']
+        fail_msg: "Unsupported OS detected. This playbook targets SLES and Ubuntu workflows only."
+
+    - name: Configure Institutional Network Hostname
+      ansible.builtin.hostname:
+        name: "{{ inventory_hostname }}.{{ environment_tier | lower }}.internal"
+
+    - name: Install Puppet 8 OpenSource Repository (Debian/Ubuntu)
+      ansible.builtin.apt_deb:
+        deb: "https://puppet.com{{ ansible_distribution_release }}.deb"
+      when: ansible_os_family == 'Debian'
+
+    - name: Install Puppet 8 OpenSource Repository (SLES 15)
+      community.general.zypper_repository:
+        name: puppet8
+        repo: "https://puppet.com"
+        state: present
+      when: ansible_os_family == 'Suse'
+
+    - name: Install Puppet Agent Packages
+      ansible.builtin.package:
+        name: puppet-agent
+        state: present
+
+    - name: Configure Puppet Agent Settings
+      ansible.builtin.template:
+        src: puppet.conf.j2
+        dest: /etc/puppetlabs/puppet/puppet.conf
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Enable and Start Puppet Agent Service
+      ansible.builtin.systemd:
+        name: puppet
+        enabled: yes
+        state: started
+
+    - name: Trigger Initial Puppet Run and Report Status
+      ansible.builtin.command: /opt/puppetlabs/bin/puppet agent --test
+      register: puppet_run
+      failed_when: puppet_run.rc not in [0, 2] # 2 means changes were successfully applied
+      changed_when: puppet_run.rc == 2
