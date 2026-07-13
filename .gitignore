@@ -1,0 +1,17 @@
+# ==============================================================================
+# Gitignore Profile: Ansible, OS, & Configuration Management
+# ==============================================================================
+
+# Ansible retry paths and execution logs
+*.retry
+*.log
+ansible-debug.log
+
+# Abstraction secret variable overrides 
+group_vars/vault.yml
+host_vars/*_secret.yml
+secrets/
+
+# System specific lock files and thumbnail trackers
+.DS_Store
+Thumbs.db
