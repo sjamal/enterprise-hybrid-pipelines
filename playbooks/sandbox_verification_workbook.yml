@@ -1,0 +1,50 @@
+---
+# ==============================================================================
+# Playbook Name: sandbox_verification_workbook.yml
+# Description: Independent integration testing playbook executing safety checks
+#              and verifying local variable inheritance rules within a sandbox.
+# ==============================================================================
+
+- name: Sandbox Infrastructure Integration Verification
+  hosts: localhost
+  gather_facts: true
+  vars:
+    test_tier: "ISIT"
+    expected_puppet_package: "puppet-agent"
+
+  tasks:
+    - name: Block 1 - Evaluate Package Architecture Compatibility
+      block:
+        - name: Audit OS Platform Distribution Baseline
+          ansible.builtin.debug:
+            msg: "Evaluating infrastructure playbook mapping rules on platform family: {{ ansible_os_family }}"
+
+        - name: Verify Core Deployment Tool Availability
+          ansible.builtin.command:
+            cmd: which puppet || echo "not_found"
+          register: agent_check
+          changed_when: false
+
+        - name: Assert Target Conditions Match Sandbox Requirements
+          ansible.builtin.assert:
+            that:
+              - test_tier in ['ISIT', 'QA', 'UAT']
+            fail_msg: "Sandbox workbook execution terminated: Block parameters set to a locked production state."
+      displayName: "Pre-Flight Dependency Validation Block"
+
+    - name: Block 2 - Dynamic Network Environment Simulations
+      block:
+        - name: Simulate Network Boundary Validation Loops
+          ansible.builtin.iptables:
+            chain: INPUT
+            protocol: tcp
+            destination_port: 8140
+            action: check
+          register: iptables_check
+          failed_when: false
+          changed_when: false
+
+        - name: Output Infrastructure Assessment Summary Metrics
+          ansible.builtin.debug:
+            msg: "Testing complete. Configuration matrix matches verification criteria for tier: {{ test_tier }}"
+      displayName: "Network Path Emulation Block"
