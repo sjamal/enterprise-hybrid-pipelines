@@ -17,3 +17,14 @@ Compute deployment mechanisms often lack native configuration handoff coordinati
 Supported parameters map to standard multi-tiered operating profiles:
 - **On-Prem Tiers:** SIT, DEV, QA, UAT, PRD infrastructure.
 - **Cloud Architecture Zones:** Sandbox (SB), Development (DEV), Quality Assurance & Testing (QA, QAT), Production (PRD, PROD) zones.
+
+## Related Enterprise Projects
+
+This repository is part of an integrated enterprise automation ecosystem orchestrated by `hybrid-governance-automation`. Complementary projects:
+
+- **[hybrid-governance-automation](https://github.com/sjamal/hybrid-governance-automation)** — Change gating, compliance validation, and CI/CD orchestration framework
+- **[enterprise-network-mesh](https://github.com/sjamal/enterprise-network-mesh)** — Network architecture validation and boundary auditing
+- **[enterprise-cert-cryptographer](https://github.com/sjamal/enterprise-cert-cryptographer)** — Certificate management and secure distribution
+- **[ansible](https://github.com/sjamal/ansible)** — Ansible playbooks for infrastructure configuration
+- **[puppet-enterprise-profiles](https://github.com/sjamal/puppet-enterprise-profiles)** — Puppet modules for enterprise environments
+- **[puppet-sles-hardening](https://github.com/sjamal/puppet-sles-hardening)** — CIS hardening for SLES
